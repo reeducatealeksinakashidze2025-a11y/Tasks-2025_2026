@@ -1,0 +1,1 @@
+C# (pronounced "C Sharp") is a modern, object-oriented, and type-safe programming language developed by Microsoft as part of its .NET initiative. It is a general-purpose language that supports multiple programming paradigms, including imperative, declarative, functional, generic, and component-oriented programming.

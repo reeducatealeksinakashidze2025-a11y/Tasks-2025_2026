@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= expense.name %> edit
+    </title>
+</head>
+
+<body>
+    <h1>Edit page</h1>
+    <a href="/"> Back to home</a>
+    <form action="/api/expenses/<%= expense.id %>/update" method="post">
+        <input value="<%= expense.title %>" type="text" name="title" placeholder="enter expense title" required>
+        <input value="<%= expense.category %>" type="text" name="category" placeholder="enter expense category" required>
+        <input value="<%= expense.amount %>" type="number" name="amount" placeholder="enter expense amount" step="any" required>
+        <input value="<%= expense.date %>" type="date" name="date" placeholder="enter expense date" required>
+        <button>Edit expense</button>
+
+    </form>
+
+</body>
+
+</html>

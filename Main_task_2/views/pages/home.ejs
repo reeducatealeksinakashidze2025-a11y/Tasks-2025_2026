@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <%- include('../partials/header.ejs') %>
+    <a href="/create">Create nuw expense</a>
+<br>
+<form action="/" method="get">
+<input type="search" name="category" placeholder="expense category">
+<button>Search </button>
+</form>
+<br>
+
+    <% expenses.forEach(element=> { %>
+        <div class="expenseCard">
+            <h2>Title:<%= element.title %>
+            </h2>
+            <h2>Category:<%= element.category %>
+            </h2>
+             <h2>Amount:<%= element.amount %>
+            </h2>
+             <h2>Date:<%= element.date %>
+            </h2>
+            <a href="/expenses/<%=element.id %>">
+                Show details
+            </a>
+            <a href="/expenses/<%= element.id %>/details">
+                Update
+            </a>
+            <form action="/api/expenses/<%= element.id %>/delete" method="get">
+                <button>Delete</button>
+            </form>
+        </div>
+        <% }); %>
+<%- include('../partials/footer.ejs') %>
+</body>
+
+</html>

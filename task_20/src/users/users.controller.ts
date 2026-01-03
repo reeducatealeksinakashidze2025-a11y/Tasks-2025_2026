@@ -1,35 +1,39 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query } from "@nestjs/common";
 import { UsersService } from "./users.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
+import { CreateUserPipe } from "./pipes/create-user.pipe";
+import { UserQueryPipe } from "./pipes/user-query.pipe";
+import { UserQueryDto } from "./dto/user-query.dto";
 
 
 @Controller('users')
 export  class UsersController{
     constructor(private readonly usersService:UsersService){}
     @Get()
-    getAllUsers(){
-        return this.usersService.getAllUsers()
+    getAllUsers(@Query(new UserQueryPipe()) query:UserQueryDto){
+        console.log(query)
+        return this.usersService.getAllUsers(query)
     }
 
     @Post()
-    createUser(@Body() createUserDto:CreateUserDto){
+    createUser(@Body(new CreateUserPipe()) createUserDto:CreateUserDto){
         return this.usersService.createUser(createUserDto)
     }
 
     @Get(':id')
-    getUserById(@Param('id') id:string){
-        return this.usersService.getUserById(Number(id))
+    getUserById(@Param('id',ParseIntPipe) id){
+        return this.usersService.getUserById(id)
     }
 
     @Delete(':id')
-    deleteUserById(@Param('id') id:string){
-        return this.usersService.deleteUserById(Number(id))
+    deleteUserById(@Param('id',ParseIntPipe) id){
+        return this.usersService.deleteUserById(id)
     }
 
     @Patch(':id')
-    updateUserById(@Param('id') id:string, @Body() updateUserDto:UpdateUserDto){
-        return this.usersService.updateUserById(Number(id), updateUserDto)
+    updateUserById(@Param('id',ParseIntPipe) id, @Body() updateUserDto:UpdateUserDto){
+        return this.usersService.updateUserById(id, updateUserDto)
     }
 
 }

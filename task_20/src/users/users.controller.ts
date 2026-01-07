@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, Req, UseGuards } from "@nestjs/common";
 import { UsersService } from "./users.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
@@ -35,5 +35,9 @@ export  class UsersController{
     updateUserById(@Param('id',ParseIntPipe) id, @Body() updateUserDto:UpdateUserDto){
         return this.usersService.updateUserById(id, updateUserDto)
     }
-
+     @Get('upgrade-subscription/:id')
+     upgradeSubscription(@Param('id',ParseIntPipe) id){
+        return this.usersService.upgradeSubscription(id)
+    }
+    
 }

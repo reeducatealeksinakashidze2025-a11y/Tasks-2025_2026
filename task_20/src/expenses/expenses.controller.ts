@@ -14,7 +14,6 @@ import { CreateExpenseDto } from './dto/create-expense.dto';
 import { UpdateExpenseDto } from './dto/update-expense.dto';
 import { CreateExpensePipe } from './pipes/create-expense.pipe';
 import { ExpenseQueryPapi } from './pipes/expenses-query.pipe';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { ExpenseQueryDto } from './dto/expense-query.dto';
 
 @Controller('expenses')

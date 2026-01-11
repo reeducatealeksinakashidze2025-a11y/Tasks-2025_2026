@@ -1,4 +1,4 @@
-import { IsEnum, IsIn, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsEnum, IsIn, IsMongoId, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { knowCategories } from '../enums/expense-category.enum';
 
 export class CreateExpenseDto {
@@ -15,5 +15,8 @@ export class CreateExpenseDto {
   @IsNotEmpty()
   @IsNumber()
   price: number;
+@IsNotEmpty()
+@IsMongoId()
+  user:string
   // totalPrice: number;
 }

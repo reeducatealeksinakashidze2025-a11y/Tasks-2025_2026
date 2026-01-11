@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -15,6 +14,7 @@ import { UpdateExpenseDto } from './dto/update-expense.dto';
 import { CreateExpensePipe } from './pipes/create-expense.pipe';
 import { ExpenseQueryPapi } from './pipes/expenses-query.pipe';
 import { ExpenseQueryDto } from './dto/expense-query.dto';
+import { IsValidObjectId } from 'src/common/dto/is-valid-object-id.dto';
 
 @Controller('expenses')
 export class ExpensesController {
@@ -26,7 +26,7 @@ export class ExpensesController {
   }
 
   @Get(':id')
-  getExpenseByid(@Param('id', ParseIntPipe) id) {
+  getExpenseByid(@Param() {id}:IsValidObjectId) {
     return this.expensesService.getExpenseById(id);
   }
 
@@ -38,7 +38,7 @@ export class ExpensesController {
 
   @Patch(':id')
   updateExpense(
-    @Param('id', ParseIntPipe) id,
+    @Param() {id}:IsValidObjectId,
     @Body() updateExpenseDto: UpdateExpenseDto,
   ) {
     console.log(updateExpenseDto);
@@ -46,7 +46,7 @@ export class ExpensesController {
   }
 
   @Delete(':id')
-  deleteUserById(@Param('id', ParseIntPipe) id) {
+  deleteUserById(@Param() {id}:IsValidObjectId) {
     return this.expensesService.deleteExpense(id);
   }
 }

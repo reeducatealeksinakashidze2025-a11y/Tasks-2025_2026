@@ -2,10 +2,16 @@ import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
 import { UsersController } from "./users.controller";
 import { UsersService } from "./users.service";
 import { GetUserAgentMiddleware } from "src/middlewares/get-user-agent.middleware";
+import { MongooseModule } from "@nestjs/mongoose";
+import { User, UserSchema } from "./schema/users.schema";
 
 
 @Module({
-    imports:[],
+    imports:[
+        MongooseModule.forFeature([
+            {name:User.name, schema:UserSchema }
+        ])
+    ],
     controllers:[UsersController],
     providers:[UsersService],
     exports: [UsersService]

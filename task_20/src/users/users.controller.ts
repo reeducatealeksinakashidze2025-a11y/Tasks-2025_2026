@@ -5,13 +5,14 @@ import { UpdateUserDto } from "./dto/update-user.dto";
 import { CreateUserPipe } from "./pipes/create-user.pipe";
 import { UserQueryPipe } from "./pipes/user-query.pipe";
 import { UserQueryDto } from "./dto/user-query.dto";
+import { IsValidObjectId } from "src/common/dto/is-valid-object-id.dto";
 
 
 @Controller('users')
 export  class UsersController{
     constructor(private readonly usersService:UsersService){}
     @Get()
-    getAllUsers(@Query(new UserQueryPipe()) query:UserQueryDto){
+    getAllUsers(@Query(/*new UserQueryPipe()*/) query:UserQueryDto){
         console.log(query)
         return this.usersService.getAllUsers(query)
     }
@@ -22,21 +23,21 @@ export  class UsersController{
     }
 
     @Get(':id')
-    getUserById(@Param('id',ParseIntPipe) id){
+    getUserById(@Param() {id}:IsValidObjectId){
         return this.usersService.getUserById(id)
     }
 
     @Delete(':id')
-    deleteUserById(@Param('id',ParseIntPipe) id){
+    deleteUserById(@Param() {id}:IsValidObjectId){
         return this.usersService.deleteUserById(id)
     }
 
     @Patch(':id')
-    updateUserById(@Param('id',ParseIntPipe) id, @Body() updateUserDto:UpdateUserDto){
+    updateUserById(@Param() {id}:IsValidObjectId, @Body() updateUserDto:UpdateUserDto){
         return this.usersService.updateUserById(id, updateUserDto)
     }
      @Get('upgrade-subscription/:id')
-     upgradeSubscription(@Param('id',ParseIntPipe) id){
+     upgradeSubscription(@Param() {id}:IsValidObjectId){
         return this.usersService.upgradeSubscription(id)
     }
     

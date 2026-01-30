@@ -3,6 +3,7 @@ import {
   HttpStatus,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { CreateExpenseDto } from './dto/create-expense.dto';
 import { UpdateExpenseDto } from './dto/update-expense.dto';
@@ -11,11 +12,13 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Expenses } from './schema/expenses.schema';
 import { Model } from 'mongoose';
 import { UsersService } from 'src/users/users.service';
+import { User } from 'src/users/schema/users.schema';
 
 @Injectable()
 export class ExpensesService {
   constructor(
     @InjectModel(Expenses.name) private expenseModel: Model<Expenses>,
+    @InjectModel('user') private userModel: Model<User>,
     private usersService: UsersService,
   ) {}
 
@@ -43,13 +46,10 @@ export class ExpensesService {
     return expense;
   }
 
-  async createExpense({
-    category,
-    productName,
-    quantity,
-    price,
-    user,
-  }: CreateExpenseDto) {
+  async createExpense(
+    { category, productName, quantity, price }: CreateExpenseDto,
+    userId,
+  ) {
     if (!category || !productName || !quantity || !price)
       throw new HttpException('all fild is required', HttpStatus.BAD_REQUEST);
     const newExpense = {
@@ -58,19 +58,22 @@ export class ExpensesService {
       quantity: quantity,
       price: price,
       totalPrice: quantity * price,
-      user: user,
+      user: userId,
     };
 
     const result = await this.expenseModel.create(newExpense);
-    if (result) await this.usersService.addExpenseToUser(result._id, user);
+    if (result) await this.usersService.addExpenseToUser(result._id, userId);
     return result;
   }
   async updateExpense(
     id: string,
     { category, productName, quantity, price }: UpdateExpenseDto,
+    userId,
   ) {
     const expense = await this.expenseModel.findById(id).exec();
     if (!expense) throw new NotFoundException('expense not found');
+    if (expense.user !== userId)
+      throw new UnauthorizedException('permition denied');
     const expenseReq = {};
     if (category) expenseReq['category'] = category;
     if (productName) expenseReq['productName'] = productName;
@@ -88,9 +91,17 @@ export class ExpensesService {
 
     return updatedExpense;
   }
-  async deleteExpense(id: string) {
+  async deleteExpense(id: string, userId) {
+    const existExpense = await this.expenseModel.findById(id);
+    if (!existExpense) throw new NotFoundException('expense not found');
+    if (existExpense.user !== userId)
+      throw new UnauthorizedException('permition denied');
     const deletedExpense = await this.expenseModel.findByIdAndDelete(id);
     if (!deletedExpense) throw new NotFoundException('expense not found');
+
+    await this.userModel.findByIdAndUpdate(userId, {
+      $pull: { expenses: deletedExpense?._id },
+    });
     return deletedExpense;
   }
 }

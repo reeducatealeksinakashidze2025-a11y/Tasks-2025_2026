@@ -15,8 +15,6 @@ export class CreateExpenseDto {
   @IsNotEmpty()
   @IsNumber()
   price: number;
-@IsNotEmpty()
-@IsMongoId()
-  user:string
+
   // totalPrice: number;
 }

@@ -13,6 +13,7 @@ import { GetUserAgentMiddleware } from './middlewares/get-user-agent.middleware'
 import { SubscriptionGuard } from './guards/user-subscription.guard';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -22,7 +23,8 @@ import { MongooseModule } from '@nestjs/mongoose';
     ConfigModule.forRoot({
       isGlobal:true
     }),
-    MongooseModule.forRoot( process.env.MONGO_URL!)
+    MongooseModule.forRoot( process.env.MONGO_URL!),
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService, SubscriptionGuard],

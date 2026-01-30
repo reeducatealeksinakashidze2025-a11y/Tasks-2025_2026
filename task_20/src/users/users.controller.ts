@@ -17,10 +17,10 @@ export  class UsersController{
         return this.usersService.getAllUsers(query)
     }
 
-    @Post()
-    createUser(@Body(new CreateUserPipe()) createUserDto:CreateUserDto){
-        return this.usersService.createUser(createUserDto)
-    }
+    // @Post()
+    // createUser(@Body(new CreateUserPipe()) createUserDto:CreateUserDto){
+    //     return this.usersService.createUser(createUserDto)
+    // }
 
     @Get(':id')
     getUserById(@Param() {id}:IsValidObjectId){

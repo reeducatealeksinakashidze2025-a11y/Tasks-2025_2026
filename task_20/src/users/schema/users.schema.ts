@@ -31,6 +31,12 @@ export class User {
   })
   phoneNumber: string;
   @Prop({
+    type:String,
+    required:true,
+    select:false
+  })
+  password:string
+  @Prop({
     type: Number,
     enum:Gender,
     required: true,

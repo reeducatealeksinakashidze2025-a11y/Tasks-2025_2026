@@ -37,37 +37,37 @@ export class UsersService {
     return query.skip((page - 1) * take).limit(take);
   }
 
-  async createUser({
-    firstName,
-    lastName,
-    email,
-    phoneNumber,
-    gender,
-  }: CreateUserDto) {
-    if (!firstName || !lastName || !email)
-      throw new HttpException(
-        'firstName, lastName and email is required',
-        HttpStatus.BAD_REQUEST,
-      );
+  // async createUser({
+  //   firstName,
+  //   lastName,
+  //   email,
+  //   phoneNumber,
+  //   gender,
+  // }: CreateUserDto) {
+  //   if (!firstName || !lastName || !email)
+  //     throw new HttpException(
+  //       'firstName, lastName and email is required',
+  //       HttpStatus.BAD_REQUEST,
+  //     );
 
-    const existUser = await this.userModel.findOne({ email });
-    if (existUser) throw new BadRequestException('user alredy exist');
+  //   const existUser = await this.userModel.findOne({ email });
+  //   if (existUser) throw new BadRequestException('user alredy exist');
 
-    const startDate = new Date();
-    const endDate = new Date(startDate);
-    endDate.setMonth(endDate.getMonth() + 1);
-    const newUser = {
-      firstName: firstName,
-      lastName: lastName,
-      email: email,
-      phoneNumber: phoneNumber,
-      gender: gender,
-      subscriptionStartDate: startDate,
-      subscriptionEndDate: endDate,
-    };
-    this.userModel.create(newUser);
-    return newUser;
-  }
+  //   const startDate = new Date();
+  //   const endDate = new Date(startDate);
+  //   endDate.setMonth(endDate.getMonth() + 1);
+  //   const newUser = {
+  //     firstName: firstName,
+  //     lastName: lastName,
+  //     email: email,
+  //     phoneNumber: phoneNumber,
+  //     gender: gender,
+  //     subscriptionStartDate: startDate,
+  //     subscriptionEndDate: endDate,
+  //   };
+  //   this.userModel.create(newUser);
+  //   return newUser;
+  // }
 
   async getUserById(userId: string) {
     const user = await this.userModel.findById(userId);

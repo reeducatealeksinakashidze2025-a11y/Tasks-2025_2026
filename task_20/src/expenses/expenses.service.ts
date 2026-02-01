@@ -18,7 +18,7 @@ import { User } from 'src/users/schema/users.schema';
 export class ExpensesService {
   constructor(
     @InjectModel(Expenses.name) private expenseModel: Model<Expenses>,
-    @InjectModel('user') private userModel: Model<User>,
+    @InjectModel('User') private userModel: Model<User>,
     private usersService: UsersService,
   ) {}
 

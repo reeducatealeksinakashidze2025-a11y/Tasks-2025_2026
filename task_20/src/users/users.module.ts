@@ -14,7 +14,7 @@ import { User, UserSchema } from "./schema/users.schema";
     ],
     controllers:[UsersController],
     providers:[UsersService],
-    exports: [UsersService]
+    exports: [UsersService, MongooseModule]
 })
 export class   UserModule implements NestModule{
     configure(consumer: MiddlewareConsumer) {

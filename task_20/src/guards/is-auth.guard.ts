@@ -15,14 +15,14 @@ export class IsAuthGuard implements CanActivate {
     const req = context.switchToHttp().getRequest();
     const authorization = req.headers['authorization'];
     console.log(authorization);
-    if (!authorization) throw new UnauthorizedException('permition denied');
+    if (!authorization) throw new UnauthorizedException('permition deniedddd');
     const [type, token] = authorization.split(' ');
     console.log(token);
-    if (!token) throw new UnauthorizedException('permition denied');
+    if (!token) throw new UnauthorizedException('permition deniedeeee');
 
     try {
       const payload = this.jwtService.verify(token);
-      req['userId'] = payload.userId;
+        req.user = payload;
       console.log('payload', payload);
       return true;
     } catch (e) {

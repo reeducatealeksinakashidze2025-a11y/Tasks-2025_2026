@@ -13,6 +13,7 @@ import { Expenses } from './schema/expenses.schema';
 import { Model } from 'mongoose';
 import { UsersService } from 'src/users/users.service';
 import { User } from 'src/users/schema/users.schema';
+import { Role } from 'src/common/enums/role.enum';
 
 @Injectable()
 export class ExpensesService {
@@ -29,7 +30,10 @@ export class ExpensesService {
     priceFrom,
     priceTo,
   }: ExpenseQueryDto) {
-    let query = this.expenseModel.find();
+    let query = this.expenseModel.find().populate({
+      path: 'user',
+      select: 'email',
+    });
     if (category) query = query.where('category').equals(category);
     if (priceFrom) {
       query = query.where('price').gte(priceFrom);
@@ -69,10 +73,11 @@ export class ExpensesService {
     id: string,
     { category, productName, quantity, price }: UpdateExpenseDto,
     userId,
+    role,
   ) {
     const expense = await this.expenseModel.findById(id).exec();
     if (!expense) throw new NotFoundException('expense not found');
-    if (expense.user !== userId)
+    if (expense.user !== userId && role !== Role.ADMIN)
       throw new UnauthorizedException('permition denied');
     const expenseReq = {};
     if (category) expenseReq['category'] = category;
@@ -91,10 +96,11 @@ export class ExpensesService {
 
     return updatedExpense;
   }
-  async deleteExpense(id: string, userId) {
+  async deleteExpense(id: string, userId, role) {
+    console.log( 'roleeeeeeeeeeeeebi', role)
     const existExpense = await this.expenseModel.findById(id);
     if (!existExpense) throw new NotFoundException('expense not found');
-    if (existExpense.user !== userId)
+    if (existExpense.user !== userId && role !== Role.ADMIN)
       throw new UnauthorizedException('permition denied');
     const deletedExpense = await this.expenseModel.findByIdAndDelete(id);
     if (!deletedExpense) throw new NotFoundException('expense not found');

@@ -9,12 +9,12 @@ import { UserId } from 'src/decorators/user-id.decorator';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('sing-up')
+  @Post('sign-up')
   singUp(@Body() singUpDto: SingUpDto) {
     return this.authService.singUp(singUpDto);
   }
 
-  @Post('sing-in')
+  @Post('sign-in')
   singIn(@Body() singInDto:SingInDto) {
     return this.authService.singIn(singInDto)
   }

@@ -33,7 +33,7 @@ export class Expenses {
   @Prop({
     type:mongoose.Types.ObjectId,
     required:true,
-    ref:'Users'
+    ref:'User'
 })
 user:mongoose.Types.ObjectId
 

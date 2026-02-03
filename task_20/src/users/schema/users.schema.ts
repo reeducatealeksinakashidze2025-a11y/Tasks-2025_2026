@@ -1,10 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import { Gender } from 'src/common/enums/gender.enum';
+import { Role } from 'src/common/enums/role.enum';
 import { Expenses } from 'src/expenses/schema/expenses.schema';
 
 @Schema({
-    timestamps:true
+  timestamps: true,
 })
 export class User {
   @Prop({
@@ -20,43 +21,48 @@ export class User {
   @Prop({
     type: String,
     required: true,
-    lowercase:true,
-    unique:true
+    lowercase: true,
+    unique: true,
   })
   email: string;
   @Prop({
     type: String,
     required: true,
-    unique:true
+    unique: true,
   })
   phoneNumber: string;
   @Prop({
-    type:String,
-    required:true,
-    select:false
+    type: String,
+    required: true,
+    select: false,
   })
-  password:string
+  password: string;
   @Prop({
     type: Number,
-    enum:Gender,
+    enum: Gender,
     required: true,
   })
   gender: Gender;
-   @Prop({
-    type: Date
-  })
-  subscriptionStartDate:Date;
-   @Prop({
-    type: Date
-  })
-  subscriptionEndDate:Date;
   @Prop({
-    type:[mongoose.Types.ObjectId],
-    ref:"Expenses",
-    default:[]
-
+    type: Date,
   })
-  expenses:mongoose.Types.ObjectId[]
+  subscriptionStartDate: Date;
+  @Prop({
+    type: Date,
+  })
+  subscriptionEndDate: Date;
+  @Prop({
+    enum: Role,
+    default: Role.USER,
+  })
+  role: Role;
+
+  @Prop({
+    type: [mongoose.Types.ObjectId],
+    ref: 'Expenses',
+    default: [],
+  })
+  expenses: mongoose.Types.ObjectId[];
 }
 
-export const UserSchema =SchemaFactory.createForClass(User)
+export const UserSchema = SchemaFactory.createForClass(User);

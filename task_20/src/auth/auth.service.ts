@@ -27,6 +27,7 @@ private jwtService:JwtService
       phoneNumber: singUpDto.phoneNumber,
       email: singUpDto.email,
       gender: singUpDto.gender,
+      role:singUpDto.role,
       password: hashedOassword,
       subscriptionStartDate: startDate,
       subscriptionEndDate: endDate,
@@ -49,7 +50,8 @@ private jwtService:JwtService
     if (!isPassEqual) throw new BadRequestException('invalid Credentials');
 
     const payload={
-        userId:existUser._id
+        userId:existUser._id,
+        role:existUser.role
     }
     var token =await this.jwtService.sign(payload, {expiresIn:'1h'})
     return token;

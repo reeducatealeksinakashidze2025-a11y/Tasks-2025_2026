@@ -9,12 +9,14 @@ async function bootstrap() {
 
   app.use(loggerMiddleware)
 
+  app.enableCors()
+
   app.useGlobalPipes(new ValidationPipe({
     whitelist:true,
     // forbidNonWhitelisted:true,
     transform:true
   }))
 // app.useGlobalGuards(app.get(SubscriptionGuard));
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(process.env.PORT ?? 3001);
 }
 bootstrap();

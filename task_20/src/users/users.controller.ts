@@ -30,6 +30,11 @@ export class UsersController {
     return this.usersService.getAllUsers(query);
   }
 
+  @Get("byGender")
+  getByGender(){
+    return this.usersService.getByGender()
+  }
+
   // @Post()
   // createUser(@Body(new CreateUserPipe()) createUserDto:CreateUserDto){
   //     return this.usersService.createUser(createUserDto)

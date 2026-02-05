@@ -6,6 +6,7 @@ import {
   // Inject,
   Injectable,
   NotFoundException,
+  OnModuleInit,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -16,12 +17,22 @@ import mongoose, { Model } from 'mongoose';
 // import { ExpensesService } from 'src/expenses/expenses.service';
 
 @Injectable()
-export class UsersService {
+export class UsersService implements OnModuleInit {
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
     // @Inject(forwardRef(()=> ExpensesService))
     // private expensesService:ExpensesService
   ) {}
+  async onModuleInit() {
+    await this.userModel.updateMany(
+      { isActive: { $exists: false } },
+      { $set: { isActive: false } },
+    );
+     await this.userModel.updateMany(
+       { age: { $exists: false } },
+      { $set: { age: 15 } },
+    );
+  }
 
   async getAllUsers({ page, take, gender, email }: UserQueryDto) {
     let query = this.userModel
@@ -35,6 +46,18 @@ export class UsersService {
       query = query.where('email').regex(new RegExp(`^${email}`, 'i'));
     }
     return query.skip((page - 1) * take).limit(take);
+  }
+
+  async getByGender() {
+    return await this.userModel.aggregate([
+      {
+        $group: {
+          _id: '$gender',
+          counte: { $sum: 1 },
+          avarageAge:{$avg:'$age'}
+        },
+      },
+    ]);
   }
 
   // async createUser({

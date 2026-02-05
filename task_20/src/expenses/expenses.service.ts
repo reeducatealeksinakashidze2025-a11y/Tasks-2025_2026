@@ -44,6 +44,91 @@ export class ExpensesService {
     return query.skip((page - 1) * take).limit(take);
   }
 
+  async getStatistic() {
+    console.log('shemovida');
+    return this.expenseModel.aggregate([
+      {
+        $group: {
+          _id: '$category',
+          totalAmount: { $sum: '$totalPrice' },
+          quantity: { $sum: '$quantity' },
+          counte: { $sum: 1 },
+          // fullname: { $first: '$productName' }
+        },
+      },
+    ]);
+  }
+
+  async getTopSpender(limit: number) {
+    console.log('shemovida');
+    // return this.expenseModel.aggregate([
+    //   {
+    //     $group: {
+    //       _id: '$user',
+    //       totalAmount: { $sum: '$totalPrice' },
+    //     },
+    //   },
+    //   {
+    //     $lookup: {
+    //       from: 'users',
+    //       localField: '_id',
+    //       foreignField: '_id',
+    //       as: 'users',
+    //     },
+    //   },
+    //    { $unwind: '$users' },
+    //      { $sort: { totalAmount: -1 } },
+    //   { $limit: limit },
+    //   {
+    //     $project: {
+    //        _id: 0,
+    //       fullname: {
+    //         $concat: [
+    //           { $arrayElemAt: ['$user.firstName', 0] },
+    //           ' ',
+    //           { $arrayElemAt: ['$user.lastName', 0] },
+    //         ],
+    //       },
+    //       totalAmount: 1,
+    //     },
+    //   },
+    // ]);
+    return this.expenseModel.aggregate([
+      {
+        $group: {
+          _id: '$user',
+          totalAmount: { $sum: '$totalPrice' },
+        },
+      },
+      // {
+      //   $lookup: {
+      //     from: 'users',
+      //     localField: '_id',
+      //     foreignField: '_id',
+      //     as: 'user',
+      //   },
+      // },
+      {
+        $lookup: {
+          from: 'users',
+          let: { userId: { $toObjectId: '$_id' } },
+          pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$userId'] } } }],
+          as: 'user',
+        },
+      },
+
+       { $unwind: '$user' },
+       { $limit: limit },
+      {
+        $project: {
+          _id: 0,
+          fullname: { $concat: ['$user.firstName', ' ', '$user.lastName'] },
+          totalAmount: 1,
+        },
+      },
+    ]);
+  }
+
   async getExpenseById(id: string) {
     const expense = await this.expenseModel.findById(id);
     if (!expense) throw new NotFoundException('expense not found');
@@ -97,7 +182,7 @@ export class ExpensesService {
     return updatedExpense;
   }
   async deleteExpense(id: string, userId, role) {
-    console.log( 'roleeeeeeeeeeeeebi', role)
+    console.log('roleeeeeeeeeeeeebi', role);
     const existExpense = await this.expenseModel.findById(id);
     if (!existExpense) throw new NotFoundException('expense not found');
     if (existExpense.user !== userId && role !== Role.ADMIN)
